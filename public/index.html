@@ -8,30 +8,30 @@
 </head>
 <body>
   <div class="sidebar fill">
-    <button class="server"><span class="fill">home</span></button>
-    <button class="options"><span class="fill">settings</span></button>
-    <button class="console"><span class="fill">code_blocks</span></button>
-    <button class="mods" focus><span class="fill">build</span></button>
-    <button class="files"><span class="fill">folder_open</span></button>
+    <button title="Server" class="server"><span class="fill">home</span></button>
+    <button title="Options" class="options"><span class="fill">settings</span></button>
+    <button title="Console" class="console"><span class="fill">code_blocks</span></button>
+    <button title="Mods" class="mods" focus><span class="fill">build</span></button>
+    <button title="Files" class="files"><span class="fill">folder_open</span></button>
   </div>
   <main class="server">
     <div class="run-control">
-      <button class="start" onclick="server.flip()"><span class="fill">play_arrow</span></button>
+      <button title="Start" class="start" onclick="server.flip()"><span class="fill">play_arrow</span></button>
       <div class="loading hidden"><span class="fill rotate">progress_activity</span></div>
-      <button class="stop hidden" onclick="server.flip()"><span class="fill">stop</span></button>
-      <button class="settings" onclick="toggleQuickSettings()"><span class="fill">settings</span></button>
+      <button title="Stop" class="stop hidden" onclick="server.flip()"><span class="fill">stop</span></button>
+      <button title="Settings" class="settings" onclick="toggleQuickSettings()"><span class="fill">settings</span></button>
     </div>
-    <button id="copy">ncsources0.ddns.net</button> <br>
+    <button title="Copy" id="copy">ncsources0.ddns.net</button> <br>
     <a href="serverPack.mrpack"></a> <br>
     [Players Online] <br>
     
   </main>
   <main class="options carousel">
     <header class="icon">
-      <button class="properties selected"><span>dns</span></button>
-      <button class="whitelist"><span>gate</span></button>
-      <button class="ops"><span>shield_person</span></button>
-      <button class="banned"><span>block</span></button>
+      <button title="Properties Selected" class="properties selected"><span>dns</span></button>
+      <button title="Whitelist" class="whitelist"><span>gate</span></button>
+      <button title="Operators" class="ops"><span>shield_person</span></button>
+      <button title="Banned" class="banned"><span>block</span></button>
     </header>
     <div class="properties selected">
       
@@ -49,8 +49,8 @@
 
   <main class="console carousel">
     <header class="icon">
-      <button class="console"><span>terminal</span></button>
-      <button class="chat"><span>chat</span></button>
+      <button title="Console" class="console"><span>terminal</span></button>
+      <button title="Chat" class="chat"><span>chat</span></button>
     </header>
     [console, chat]
   </main>
