@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCSources0's Admin Dashboard</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div class="sidebar fill">
+    <button class="server"><span class="fill">home</span></button>
+    <button class="options"><span class="fill">settings</span></button>
+    <button class="console"><span class="fill">code_blocks</span></button>
+    <button class="mods" focus><span class="fill">build</span></button>
+    <button class="files"><span class="fill">folder_open</span></button>
+  </div>
+  <main class="server">
+    <div class="run-control">
+      <button class="start" onclick="server.flip()"><span class="fill">play_arrow</span></button>
+      <div class="loading hidden"><span class="fill rotate">progress_activity</span></div>
+      <button class="stop hidden" onclick="server.flip()"><span class="fill">stop</span></button>
+      <button class="settings" onclick="toggleQuickSettings()"><span class="fill">settings</span></button>
+    </div>
+    <button id="copy">ncsources0.ddns.net</button> <br>
+    <a href="serverPack.mrpack"></a> <br>
+    [Players Online] <br>
+    
+  </main>
+  <main class="options carousel">
+    <header class="icon">
+      <button class="properties selected"><span>dns</span></button>
+      <button class="whitelist"><span>gate</span></button>
+      <button class="ops"><span>shield_person</span></button>
+      <button class="banned"><span>block</span></button>
+    </header>
+    <div class="properties selected">
+      
+    </div>
+    <div class="whitelist">
+      
+    </div>
+    <div class="ops">
+
+    </div>
+    <div class="banned">
+      This section must have one button. if the input contains "." ban an ip.
+    </div>
+  </main>
+
+  <main class="console carousel">
+    <header class="icon">
+      <button class="console"><span>terminal</span></button>
+      <button class="chat"><span>chat</span></button>
+    </header>
+    [console, chat]
+  </main>
+
+  <main class="mods" focus>
+    <div class="search">
+      <input type="text">
+      <button class="online icon">cloud</button>
+    </div>
+    <div class="projects"></div>
+  </main>
+
+  <main class="files">
+    <button class="file fill">folder</button>
+    <button class="file fill">draft</button>
+    <button class="file fill">local_cafe</button>
+    <button class="file fill">description</button>
+    <button class="file fill">edit_document</button>
+    <button class="file fill">edit_document</button>
+    <button class="file fill">edit_document</button>
+    <button class="file fill">file_json</button>
+    <button class="file fill">file_png</button>
+    <button class="file fill">csv</button>
+  </main>
+
+  <div class="status"></div>
+  <div class="quick-settings">
+    <div>
+      <table>
+        Fuck you, ts don't work.
+        <tr>
+          <th>MOTD:</th>
+          <th><input name="motd"></th>
+        </tr>
+        <tr>
+          <th>World:</th>
+          <th><input name="level-name"></th>
+        </tr>
+        <tr>
+          <th>Online:</th>
+          <th><input name="online-mode"></th>
+        </tr>
+        <tr>
+          <th>Server Name:</th>
+          <th><input name="motd"></th>
+        </tr>
+      </table>
+      <button class="close" onclick="toggleQuickSettings()"><span class="icon">close</span></button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

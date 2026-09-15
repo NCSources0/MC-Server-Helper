@@ -1,0 +1,398 @@
+@import url(fonts.css);
+
+body {
+  margin: 0;
+  overflow: hidden;
+  --sidebar-width: 48px;
+  --margin: 8px;
+  --transition: 0.4s;
+  --status-height: 2px;
+  --shadow1: #eee;
+  --shadow2: #bbb;
+}
+
+* {
+  transition-duration: var(--transition);
+  transition-property: none;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar {
+  position: fixed;
+  width: var(--sidebar-width);
+  height: 100vh;
+  box-shadow: 0 0 calc(var(--margin) * 2) #eee;
+}
+.sidebar > *, .carousel > header button {
+  margin-left: calc(var(--margin) / 2);
+  margin-top:  calc(var(--margin) / 2 + var(--status-height));
+  padding: 0;
+  width: calc(var(--sidebar-width) - var(--margin));
+  aspect-ratio: 1;
+  font-size: calc(var(--sidebar-width) - var(--margin) * 2);
+  border: 0;
+  border-radius: var(--margin);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 0 calc(var(--margin) / 2) var(--shadow1);
+  transition-property: background;
+  background: #fff;
+}
+.sidebar > *:hover, .sidebar > *[focus], .carousel > header button:hover, .carousel > header button.selected {background: #ddd}
+.sidebar > button span, .carousel > header button span {
+  pointer-events: none;
+  transition-property: scale, rotate;
+}
+.sidebar > button:hover span, .carousel > header button:hover span {scale: 1.1; rotate: 10deg}
+
+
+.close {
+  display: flex;
+  position: absolute;
+  right: calc(var(--sidebar-width) / 3);
+  top: calc(var(--sidebar-width) / 3);
+  font-size: var(--sidebar-width);
+  height: calc(var(--sidebar-width) * 1.25);
+  width: calc(var(--sidebar-width) * 1.25);
+  padding: calc(var(--sidebar-width) / 4);
+  border: 0;
+  border-radius: var(--sidebar-width);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background: #f22;
+  font-variation-settings: 'wght' 700;
+  transition-property: background, font-size, rotate;
+}
+.close:hover {
+  background: #f00;
+  font-size: calc(var(--sidebar-width) * 1.25);
+  rotate: 90deg;
+}
+
+.run-control {
+  margin-bottom: var(--margin);
+  display: flex;
+  justify-content: center;
+}
+.run-control * {
+  font-weight: 900;
+  font-size: 128px;
+  width: calc(2.8em - var(--margin));
+  border: 0;
+  border-radius: 32px;
+  padding: 0;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  transition-property: background, scale;
+  cursor: default;
+}
+.run-control button:hover span {scale: 1.1}
+
+body:has(.quick-settings.shown) .run-control .settings span,
+.run-control .settings:hover span {scale: 1.1; rotate: 360deg}
+.run-control .settings span       {transition-property: scale, rotate}
+.run-control .settings       {background: #ddd; width: 1.2em; margin-left: var(--margin)}
+.run-control .settings:hover {background: #ccc}
+.run-control .start       {background: #6f6}
+.run-control .start:hover {background: #2f2}
+.run-control .stop       {background: #f22}
+.run-control .stop:hover {background: #f00}
+.run-control .loading {background: #55f; width: 4em}
+.run-control button * {pointer-events: none}
+.run-control button {cursor: pointer}
+
+
+div.status {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: var(--status-height);
+  background: #f00;
+}
+
+
+main {
+  height: 0;
+  translate: var(--sidebar-width) var(--status-height);
+  padding: 0 var(--margin);
+  width: calc(100vw - var(--sidebar-width) - var(--margin) * 2);
+  overflow-x: hidden;
+  overflow-y: hidden;
+  transition-property: height, opacity, padding-top;
+  opacity: 0;
+}
+main[focus] {
+  padding: var(--margin) var(--margin) 0 var(--margin);
+  height: calc(100vh - var(--margin) - var(--status-height));
+  overflow-y: scroll;
+  opacity: 1;
+}
+
+.carousel > header {
+  box-shadow: var(--shadow2) 0 0 var(--margin);
+  background: linear-gradient(#ddd, #ddd);
+  height: var(--sidebar-width);
+  padding: 0 calc(var(--sidebar-width) / 4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+main.carousel > header {
+  translate: calc(var(--margin) * -1) calc(var(--margin) * -1);
+  width: calc(100% - var(--margin));
+}
+.carousel > header button:first-child {margin-left: 0}
+.carousel > header button {margin-top: 0}
+.carousel > div {
+  position: fixed;
+  padding: var(--margin) 0;
+  width: 0;
+  overflow: hidden;
+  text-wrap-mode: nowrap;
+}
+.carousel > div.selected {
+  padding: var(--margin);
+  width: 100%;
+}
+
+.quick-settings > div {
+  translate: calc(var(--sidebar-width) * 2) calc(var(--sidebar-width) * 3);
+  width:  calc(100vw - var(--sidebar-width) * 5);
+  height: calc(100vh - var(--sidebar-width) * 5);
+  padding: calc(var(--sidebar-width) / 2);
+  background: #fff;
+  border-radius: var(--sidebar-width);
+  transition-property: translate;
+}
+.quick-settings.shown > div {
+  translate: calc(var(--sidebar-width) * 2) calc(var(--sidebar-width) * 2);
+}
+.quick-settings {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  background: #000e;
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  transition-property: opacity, backdrop-filter;
+}
+.quick-settings.shown {
+  pointer-events: all;
+  opacity: 1;
+  backdrop-filter: blur(3px);
+}
+
+
+main.mods {
+  --titleSize: 24px;
+  --descriptionSize: 16px;
+  display: grid;
+  grid-template-rows: 48px 1fr;
+  row-gap: var(--margin);
+}
+
+.mods > .search {
+  display: flex;
+  background: #eee;
+  height: 48px;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.mods > .search:focus {
+  outline: 1px solid #ddd;
+}
+
+.mods > .search > input {
+  height: 48px;
+  padding: 0;
+  padding-left: calc(48px / 4);
+  border-radius: 24px 0 0 24px;
+  width: calc(100% - 48px);
+  background: 0;
+  border: 0;
+  outline: 0;
+}
+
+.mods > .search > button {
+  font-size: calc(48px - var(--margin));
+  width: 48px;
+  height: 48px;
+  border-radius: 100%;
+  background: #0000;
+  transition-property: font-variation-settings;
+  font-variation-settings:
+    'FILL' 0;
+}
+.mods > .search > button:hover,
+.mods > .search > button.toggled {
+  font-variation-settings:
+    'FILL' 1;
+}
+
+.mods {
+  overflow-y: hidden;
+}
+
+.mods > .projects {
+  width: 100%;
+  height: 100%;
+  padding-right: var(--margin);
+  overflow: scroll;
+}
+
+.mods > .projects > .project {
+  background: #eee;
+  border-radius: 16px;
+  width: 100%;
+  height: 128px;
+  display: grid;
+  grid-template-areas:
+  "img header update"
+  "img desc toggle"
+  "img desc delete"
+  "img path delete";
+  grid-template-rows: calc(var(--titleSize) + var(--margin)) 1fr calc(32px - var(--descriptionSize) - var(--margin)) calc(var(--descriptionSize) + var(--margin));
+  grid-template-columns: 128px 1fr 32px;
+  margin-bottom: var(--margin);
+  transition-property: opacity;
+}
+.mods > .projects > .project.disabled {opacity: 0.6}
+
+.mods > .projects > .project > img {
+  grid-area: img;
+  width: calc(128px - var(--margin) * 2);
+  margin: var(--margin);
+  background: #ddd;
+  border-radius: 16px;
+}
+
+.mods > .projects > .project > header {
+  grid-area: header;
+  font-size: var(--titleSize);
+  margin-top: var(--margin);
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.mods > .projects > .project span {font-size: var(--descriptionSize)}
+.mods > .projects > .project > span.desc {
+  grid-area: desc;
+  overflow: hidden;
+}
+.mods > .projects > .project > span.path {
+  grid-area: path;
+  overflow: hidden;
+}
+.mods > .projects > .project span.desc {color: #333}
+.mods > .projects > .project span.path {color: #777}
+
+.mods > .projects > .project button {
+  font-size: calc(32px - var(--margin));
+  border-radius: inherit;
+  transition-property: background;
+}
+.mods > .projects > .project button.toggle {
+  transition-property: background;
+}
+.mods > .projects > .project button.toggle div {
+  width: calc(32px - var(--margin) / 2);
+  height: calc(32px - var(--margin) / 2);
+  border-radius: 100px;
+  margin: calc(var(--margin) / 4);
+  color: #0000;
+  transition-property: background, margin-top;
+}
+.mods > .projects > .project.disabled button.toggle div {
+  margin-top: calc(32px + var(--margin) / 4);
+  background: #f00;
+}
+.mods > .projects > .project button.toggle div {
+  margin-top: calc(-32px + var(--margin) / 4);
+  background: #0f0;
+}
+.mods > .projects > .project button.toggle div {
+  margin-top: calc(-32px + var(--margin) / 4);
+  background: #0f0;
+}
+.mods > .projects > .project.online button.toggle {
+  display: none;
+}
+.mods > .projects > .project button * {
+  pointer-events: none;
+  font-size: inherit;
+}
+.mods > .projects > .project button.delete {grid-area: delete}
+.mods > .projects > .project button.update       {background: #faf}
+.mods > .projects > .project button.update:hover {background: #f7f}
+.mods > .projects > .project button.delete       {background: #faa}
+.mods > .projects > .project button.delete:hover {background: #f77}
+.mods > .projects > .project.online button.delete       {background: #aaf}
+.mods > .projects > .project.online button.delete:hover {background: #77f}
+.mods > .projects > .project button.toggle                {background: #afa}
+.mods > .projects > .project.disabled button.toggle       {background: #faa}
+.mods > .projects > .project button.toggle
+.mods > .projects > .project.disable button.toggle       {background: #faf}
+.mods > .projects > .project.disable button.toggle:hover {background: #f7f}
+
+
+.files > .file {
+  display: flex;
+  font-size: calc(64px - var(--margin));
+  width: 64px;
+  height: 64px;
+  align-items: center;
+}
+
+
+table tr th {
+  text-align: end;
+}
+input {
+  background: #0001;
+  border-radius: 0.25em;
+  border: 0;
+  padding: 0.125em;
+  outline: 0;
+  font-size: inherit;
+}
+input:focus {
+  background: #0000;
+  border: #0001 1px solid;
+  outline: #0002 1px solid;
+  padding: calc(0.125em - 1px);
+}
+
+.no-action {
+  pointer-events: none;
+}
+
+.hidden {
+  display: none;
+}
+
+.rotate {
+  animation: rotate 1s infinite;
+}
+@keyframes rotate {
+  0% {
+    rotate: 0deg;
+  }
+
+  100% {
+    rotate: 360deg;
+  }
+}

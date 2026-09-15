@@ -1,0 +1,90 @@
+@font-face {
+  font-family: Inter;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  src: url(fonts/Inter-VariableFont_opsz\,wght.ttf);
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Inter;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  src: url(fonts/Inter-Italic-VariableFont_opsz\,wght.ttf);
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Minecraft;
+  font-weight: normal;
+  src: url(fonts/MinecraftRegular.otf);
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Minecraft;
+  font-weight: normal;
+  src: url(fonts/MinecraftItalic.otf);
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Minecraft;
+  font-weight: bold;
+  src: url(fonts/MinecraftBold.otf);
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Minecraft;
+  font-weight: bold;
+  src: url(fonts/MinecraftBoldItalic.otf);
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Icon;
+  src: url(fonts/MaterialSymbolsRounded-VariableFont_FILL\,GRAD\,opsz\,wght.ttf);
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
+@font-face {
+  font-family: Emoji;
+  src: url(fonts/NotoColorEmoji-Regular.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: mono;
+  src: url(fonts/SourceCodePro-VariableFont_wght.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: mono;
+  src: url(fonts/SourceCodePro-Italic-VariableFont_wght.ttf);
+  font-weight: normal;
+  font-style: italic;
+}
+
+* {
+  font-family: Inter, sans-serif, Emoji, Icon;
+  line-height: 1.2;
+  font-weight: normal;
+}
+
+.icon *, .icon {
+  font-family: Icon, Emoji, Inter, sans-serif;
+  line-height: 1;
+}
+
+.fill *, .fill {
+  font-family: Icon, Emoji, Inter, sans-serif;
+  font-variation-settings: 'FILL' 1;
+}
