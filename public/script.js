@@ -112,6 +112,17 @@ async function getLoaderVersions(beta = flase) {
 }
 
 /**
+ * Gets all versions of the Fabric Server Installer
+ * @param { boolean } beta 
+ * @returns { Promise<string[]> }
+ */
+async function getInstallerVersions(beta = flase) {
+  const request = await get('https://meta.fabricmc.net/v2/versions/installer');
+  const versions = await request.json();
+  return (beta ? versions : versions.filter(e => e.stable)).map(e => e.version);
+}
+
+/**
  * Parses a `.properties` file
  * @param { string } file 
  * @returns {[{ key:any }]}
@@ -121,17 +132,6 @@ function parseProperties(file) {
   const object = {};
   matches.forEach(m => object[m[1].trim()] = m[2].trim());
   return object;
-}
-
-/**
- * Gets all versions of the Fabric Server Installer
- * @param { boolean } beta 
- * @returns { Promise<string[]> }
- */
-async function getInstallerVersions(beta = flase) {
-  const request = await get('https://meta.fabricmc.net/v2/versions/installer');
-  const versions = await request.json();
-  return (beta ? versions : versions.filter(e => e.stable)).map(e => e.version);
 }
 
 const server = {
@@ -189,11 +189,11 @@ const server = {
   },
   /**
    * Sends commands to the server
-   * @param { string[] } commands
+   * @param { string } commands Each command is serarated with a newline.
    * @returns { Promise<boolean> }
    */
   async send(commands) {
-    get('')
+    get('/api/send', {commands})
   } 
 };
 
@@ -221,7 +221,7 @@ sidebarButtons.forEach(e => {
 });
 
 /**
- * Listens to `/api/log` and updates `status` and `log` as needed
+ * Listens to `/api/log` and updates `server` as needed.
  */
 async function listen() {
   const request = await get('/api/log')
@@ -264,6 +264,10 @@ async function listen() {
 }
 listen();
 
+/**
+ * Searches Modrinth for mods
+ * @param { string } query 
+ */
 async function searchModrinth(query) {
   const search = query => `https://api.modrinth.com/v2/search?query=${encodeURIComponent(query || '')}&limit=100&facets=${encodeURIComponent(JSON.stringify(packFacets(modrinthFacets)))}`;
   const request = await get(search(query));
@@ -281,6 +285,10 @@ async function searchModrinth(query) {
   }}));
 }
 
+/**
+ * Parses and displays an array like `server.mods`
+ * @param { [] } modsArray 
+ */
 function updateMods(modsArray) {
   const projects = document.querySelector('main.mods > div.projects');
   projects.innerHTML = '';
@@ -339,20 +347,25 @@ const onlineToggle = document.querySelector('div.search button.online');
 const modSearch    = document.querySelector('div.search input');
 const searchOnline = () => onlineToggle.classList.contains('toggled');
 
+const filterMods = q => server.mods.filter(m => m.name.includes(q) || m.slug.includes(q) || m.id.includes(q) || m.description.includes(q) || m.path.includes(q));
+
 modSearch.addEventListener('input', () => {
   modSearch.value = modSearch.value.replaceAll('\n', '');
   const q = modSearch.value
   if (searchOnline()) searchModrinth(q);
-  else updateMods(server.mods.filter(m => m.name.includes(q) || m.slug.includes(q) || m.id.includes(q) || m.description.includes(q) || m.path.includes(q)));
+  else updateMods(filterMods(q));
 });
 
 onlineToggle.addEventListener('click', () => {
   onlineToggle.classList.toggle('toggled');
-  if (searchOnline()) searchModrinth();
+  if (searchOnline()) searchModrinth(modSearch.value);
   else updateLocalMods();
 });
 
+/**
+ * Updates mods list when told there is a new mod
+ */
 async function updateLocalMods() {
   if (searchOnline()) return;
-  updateMods(server.mods);
+  updateMods(filterMods(modSearch.value));
 }
