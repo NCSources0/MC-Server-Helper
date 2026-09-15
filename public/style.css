@@ -204,7 +204,7 @@ main.mods {
   row-gap: var(--margin);
 }
 
-.mods > .search {
+main.mods > .search {
   display: flex;
   background: #eee;
   height: 48px;
@@ -212,11 +212,11 @@ main.mods {
   z-index: 1;
 }
 
-.mods > .search:focus {
+main.mods > .search:focus {
   outline: 1px solid #ddd;
 }
 
-.mods > .search > input {
+main.mods > .search > input {
   height: 48px;
   padding: 0;
   padding-left: calc(48px / 4);
@@ -227,7 +227,7 @@ main.mods {
   outline: 0;
 }
 
-.mods > .search > button {
+main.mods > .search > button {
   font-size: calc(48px - var(--margin));
   width: 48px;
   height: 48px;
@@ -237,24 +237,24 @@ main.mods {
   font-variation-settings:
     'FILL' 0;
 }
-.mods > .search > button:hover,
-.mods > .search > button.toggled {
+main.mods > .search > button:hover,
+main.mods > .search > button.toggled {
   font-variation-settings:
     'FILL' 1;
 }
 
-.mods {
+main.mods {
   overflow-y: hidden;
 }
 
-.mods > .projects {
+main.mods > .projects {
   width: 100%;
   height: 100%;
   padding-right: var(--margin);
   overflow: scroll;
 }
 
-.mods > .projects > .project {
+main.mods > .projects > .project {
   background: #eee;
   border-radius: 16px;
   width: 100%;
@@ -270,9 +270,9 @@ main.mods {
   margin-bottom: var(--margin);
   transition-property: opacity;
 }
-.mods > .projects > .project.disabled {opacity: 0.6}
+main.mods > .projects > .project.disabled {opacity: 0.6}
 
-.mods > .projects > .project > img {
+main.mods > .projects > .project > img {
   grid-area: img;
   width: calc(128px - var(--margin) * 2);
   margin: var(--margin);
@@ -280,7 +280,7 @@ main.mods {
   border-radius: 16px;
 }
 
-.mods > .projects > .project > header {
+main.mods > .projects > .project > header {
   grid-area: header;
   font-size: var(--titleSize);
   margin-top: var(--margin);
@@ -288,27 +288,27 @@ main.mods {
   overflow: hidden;
 }
 
-.mods > .projects > .project span {font-size: var(--descriptionSize)}
-.mods > .projects > .project > span.desc {
+main.mods > .projects > .project span {font-size: var(--descriptionSize)}
+main.mods > .projects > .project > span.desc {
   grid-area: desc;
   overflow: hidden;
 }
-.mods > .projects > .project > span.path {
+main.mods > .projects > .project > span.path {
   grid-area: path;
   overflow: hidden;
 }
-.mods > .projects > .project span.desc {color: #333}
-.mods > .projects > .project span.path {color: #777}
+main.mods > .projects > .project span.desc {color: #333}
+main.mods > .projects > .project span.path {color: #777}
 
-.mods > .projects > .project button {
+main.mods > .projects > .project button {
   font-size: calc(32px - var(--margin));
   border-radius: inherit;
   transition-property: background;
 }
-.mods > .projects > .project button.toggle {
+main.mods > .projects > .project button.toggle {
   transition-property: background;
 }
-.mods > .projects > .project button.toggle div {
+main.mods > .projects > .project button.toggle div {
   width: calc(32px - var(--margin) / 2);
   height: calc(32px - var(--margin) / 2);
   border-radius: 100px;
@@ -316,37 +316,37 @@ main.mods {
   color: #0000;
   transition-property: background, margin-top;
 }
-.mods > .projects > .project.disabled button.toggle div {
+main.mods > .projects > .project.disabled button.toggle div {
   margin-top: calc(32px + var(--margin) / 4);
   background: #f00;
 }
-.mods > .projects > .project button.toggle div {
+main.mods > .projects > .project button.toggle div {
   margin-top: calc(-32px + var(--margin) / 4);
   background: #0f0;
 }
-.mods > .projects > .project button.toggle div {
+main.mods > .projects > .project button.toggle div {
   margin-top: calc(-32px + var(--margin) / 4);
   background: #0f0;
 }
-.mods > .projects > .project.online button.toggle {
+main.mods > .projects > .project.online button.toggle {
   display: none;
 }
-.mods > .projects > .project button * {
+main.mods > .projects > .project button * {
   pointer-events: none;
   font-size: inherit;
 }
-.mods > .projects > .project button.delete {grid-area: delete}
-.mods > .projects > .project button.update       {background: #faf}
-.mods > .projects > .project button.update:hover {background: #f7f}
-.mods > .projects > .project button.delete       {background: #faa}
-.mods > .projects > .project button.delete:hover {background: #f77}
-.mods > .projects > .project.online button.delete       {background: #aaf}
-.mods > .projects > .project.online button.delete:hover {background: #77f}
-.mods > .projects > .project button.toggle                {background: #afa}
-.mods > .projects > .project.disabled button.toggle       {background: #faa}
-.mods > .projects > .project button.toggle
-.mods > .projects > .project.disable button.toggle       {background: #faf}
-.mods > .projects > .project.disable button.toggle:hover {background: #f7f}
+main.mods > .projects > .project button.delete {grid-area: delete}
+main.mods > .projects > .project button.update       {background: #faf}
+main.mods > .projects > .project button.update:hover {background: #f7f}
+main.mods > .projects > .project button.delete       {background: #faa}
+main.mods > .projects > .project button.delete:hover {background: #f77}
+main.mods > .projects > .project.online button.delete       {background: #aaf}
+main.mods > .projects > .project.online button.delete:hover {background: #77f}
+main.mods > .projects > .project button.toggle                {background: #afa}
+main.mods > .projects > .project.disabled button.toggle       {background: #faa}
+main.mods > .projects > .project button.toggle
+main.mods > .projects > .project.disable button.toggle       {background: #faf}
+main.mods > .projects > .project.disable button.toggle:hover {background: #f7f}
 
 
 .files > .file {
