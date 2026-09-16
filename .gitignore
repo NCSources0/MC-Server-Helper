@@ -1,0 +1,7 @@
+node_modules
+server
+package-lock.json
+users.json
+public/modrinth.index.json
+public/serverMods.json
+public/versions.json

@@ -91,4 +91,12 @@ async function readable(path) {
   }
 }
 
-module.exports = { log, err, warn, download, writable, readable }
+function randomString(length) {
+  let string = '';
+  for (let i = 0; i < length; i++) {
+    string += String.fromCodePoint(Math.floor(Math.random() * 95) + 32);
+  }
+  return string;
+}
+
+module.exports = { log, err, warn, download, writable, readable, randomString }

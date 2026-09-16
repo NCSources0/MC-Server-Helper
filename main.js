@@ -3,16 +3,59 @@ const path      = require('path');
 const bcrypt    = require('bcrypt');
 const express   = require('express');
 const fsp       = require('fs/promises');
+const readline  = require('readline-sync');
 const cp        = require('child_process');
 const basicAuth = require('express-basic-auth');
-const { log, warn, err, download, writable, readable } = require('./helper.js');
+const { log, warn, err, download, writable, readable, randomString } = require('./helper.js');
 const EventEmitter = require('events');
 
 log('Packages Loaded');
 
+if (!fs.existsSync('./users.json')) {
+  const options = { limitMessage: 'Must have input.' }
+  log('"./users.json" not found, please create new user.')
+  const user = readline.question('Username: ', {...options, defaultInput: randomString(32)});
+  const pass = readline.question('Password: ', {...options, defaultInput: randomString(32)});
+  log('Username: ', user);
+  log('Password: ', pass);
+  fs.writeFileSync('./users.json', `{"users":{"${user.replaceAll('"', '\\"').replaceAll('\\', '\\\\')}":"${bcrypt.hashSync(pass, 12)}"}}`);
+  log('Created "./users.json"');
+}
+
+const defaultmodrinthIndex = {
+  "game": "minecraft",
+  "formatVersion": 1,
+  "versionId": "1.0.0",
+  "name": "Modpack",
+  "summary": "This modpack was automatically generated and may not include everything needed.",
+  "files": [],
+  "dependencies": { "minecraft": null, "fabric": null }
+};
+if (!fs.existsSync('./public/versions.json')) {
+  fs.writeFileSync('./public/versions.json', '{"game":null,"loader":null,"installer":null}');
+  log('Created "./public/versions.json"');
+}
+if (!fs.existsSync('./public/serverMods.json')) {
+  fs.writeFileSync('./public/serverMods.json', '[]');
+  log('Created "./public/serverMods.json"');
+}
+if (!fs.existsSync('./public/modrinth.index.json')) {
+  fs.writeFileSync('./public/modrinth.index.json', JSON.stringify(defaultmodrinthIndex, null, 2));
+  log('Created "./public/modrinth.index.json"');
+}
+if (!fs.existsSync('./server')) {
+  fs.mkdirSync('./server');
+  log('Created "./server"')
+}
+if (!fs.existsSync('./server/mods')) {
+  fs.mkdirSync('./server/mods');
+  log('Created "./server/mods"')
+}
+
+
 const app = express();
 log('App Initalized');
-const { users } = JSON.parse(fs.readFileSync('users.json'));
+const { users } = JSON.parse(fs.readFileSync('./users.json'));
 log('Users Loaded');
 const installedVersions = JSON.parse(fs.readFileSync('./public/versions.json'));
 log('Versions Loaded');
@@ -88,7 +131,6 @@ async function downloadInstaller(gameVer = 'stable', loaderVer = 'stable', insta
   }
 }
 log('Installer Downloading Function Loaded');
-downloadInstaller('26.2', )
 
 /**
  * Downloads a project from Modrinth
