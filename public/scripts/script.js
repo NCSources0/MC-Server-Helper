@@ -1,4 +1,8 @@
-const escapeRegex = /e\/\[(.*?)](.+?)\//g;
+const regex = {
+  join: /^\[[0-9:]+] \[Server thread\/INFO]: (\S+) joined the game$/gm,
+  leave: /^\[[0-9:]+] \[Server thread\/INFO]: (\S+) left the game$/gm,
+  escape: /e\/\[(.*?)](.+?)\//g
+}
 
 /**
  * Get data via `GET` or `POST` depending on weather `body` exists
@@ -64,6 +68,7 @@ const server = {
   status: 0,
   log: '',
   mods: [],
+  players: [],
   /**
    * Gets the current status of the Minecraft server
    * @returns { Promise<string> }
@@ -129,7 +134,7 @@ const server = {
  * @returns {{ content: string, calls: { call: string }}}
  */
 function parseIncoming(text) {
-  const matches = [...text.matchAll(escapeRegex)];
+  const matches = [...text.matchAll(regex.escape)];
   const { length } = matches;
   const calls = {};
   for (let i = 0; i < length; i++) {
@@ -178,6 +183,14 @@ async function listen() {
       console.warn(`Call name "${key}" is not supported.`);
     }
     server.log += content;
+
+    const joinedPlayers = regex.join .exec(content);
+    if (joinedPlayers)
+      joinedPlayers.forEach(p => server.players.push(p[1]));
+
+    const leftPlayers = regex.leave.exec(content);
+    if (leftPlayers)
+      leftPlayers.forEach(p => server.players.splice(server.players.findIndex(v => v == p[1]), 1));
   }
 
   console.log('Can\'t listen anymore.');

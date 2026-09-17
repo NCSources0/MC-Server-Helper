@@ -88,10 +88,12 @@ function updateMods(modsArray) {
 
   projects.querySelectorAll('div.project button.update').forEach(b => {
     const id = b.parentElement.querySelector('span.path.id').textContent;
-    b.addEventListener('click', () => {
-      const req = get('/api/project/download', { project: id, version: 'release' });
-      if (!req.ok) return;
-      const span = b.querySelector('span')
+    b.addEventListener('click', async () => {
+      let req = await get('/api/project/download', { project: id, version: 'release' });
+      if (!req.ok) get('/api/project/download', { project: id, version: 'beta' });
+      if (!req.ok) get('/api/project/download', { project: id, version: 'alpha' });
+      if (!req.ok) return req.text();
+      const span = b.querySelector('span');
       span.innerHTML = 'progress_activity';
       b.classList.add('rotate');
       b.parentElement.classList.add('no-action');

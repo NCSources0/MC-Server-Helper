@@ -485,7 +485,6 @@ app.get('/api/project/download', async (req, res) => {
   if (changingMods) return res.status(409).send('Mods are being updated. Try again later.');
   changingMods = true;
   try {
-    if (server.mods.find())
     if (server.status != 0) return res.status(409).send('Server is not offline.');
 
     let { project, version, replace, serveronly } = req.headers;

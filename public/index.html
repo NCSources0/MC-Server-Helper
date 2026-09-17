@@ -8,13 +8,13 @@
 </head>
 <body>
   <div class="sidebar fill">
-    <button title="Server" class="server"><span class="fill">home</span></button>
+    <button title="Server" class="server" focus><span class="fill">home</span></button>
     <button title="Options" class="options"><span class="fill">settings</span></button>
     <button title="Console" class="console"><span class="fill">code_blocks</span></button>
-    <button title="Mods" class="mods" focus><span class="fill">build</span></button>
+    <button title="Mods" class="mods"><span class="fill">build</span></button>
     <button title="Files" class="files"><span class="fill">folder_open</span></button>
   </div>
-  <main class="server">
+  <main class="server" focus>
     <div class="run-control">
       <button title="Start" class="start" onclick="server.flip()"><span class="fill">play_arrow</span></button>
       <div class="loading hidden"><span class="fill rotate">progress_activity</span></div>
@@ -55,7 +55,7 @@
     [console, chat]
   </main>
 
-  <main class="mods" focus>
+  <main class="mods">
     <div class="search">
       <input type="text">
       <button title="Search Online" class="online icon">cloud</button>
@@ -101,6 +101,8 @@
       <button title="Close" class="close" onclick="toggleQuickSettings()"><span class="icon">close</span></button>
     </div>
   </div>
+
+  <div class="install-fabric no-action"></div>
   <script src="scripts/script.js"></script>
   <script src="scripts/formatting.js"></script>
   <script src="scripts/fileExplorer.js"></script>

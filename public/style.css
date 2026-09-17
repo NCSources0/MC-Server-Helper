@@ -177,6 +177,7 @@ main.carousel > header {
 .quick-settings.shown > div {
   translate: calc(var(--sidebar-width) * 2) calc(var(--sidebar-width) * 2);
 }
+
 .quick-settings {
   position: fixed;
   top: 0;
@@ -355,6 +356,16 @@ main.mods > .projects > .project.disable button.toggle:hover {background: #f7f}
   width: 64px;
   height: 64px;
   align-items: center;
+}
+
+
+.install-fabric {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
 }
 
 
