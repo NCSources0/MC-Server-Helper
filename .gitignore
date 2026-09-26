@@ -1,5 +1,6 @@
 node_modules
 server
+tempCodeRunnerFile.js
 package-lock.json
 users.json
 public/modrinth.index.json

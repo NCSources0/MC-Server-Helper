@@ -401,11 +401,9 @@ app.get('/api/send', (req, res) => {
   if (typeof commands != 'string') return res.status(400).send('Type of "commands" is not string.');
   
   const commandArr = commands.split('\n');
-  const { length } = commandArr;
-  for (let i = 0; i < length; i++) {
-    const command = commandArr[i];
-    if (command.trim().length) server.send(command.trim() + '\n');
-  }
+  commandArr.forEach(command => {
+    if (command.trim().length) server.send(command.trim());
+  });
   res.status(200).send('Commands sent successfully.');
 });
 log('Registered /api/send?commands');
@@ -414,11 +412,9 @@ app.get('/api/server/update', async (req, res) => {
   if (server.status != 0) return res.status(409).send('Server is not offline.');
 
   const { game, loader, installer } = req.headers;
-  if (game || loader || installer) {
-    if (typeof game != 'string')      return res.status(400).send('Type of "game" is not string.');
-    if (typeof loader != 'string')    return res.status(400).send('Type of "loader" is not string.');
-    if (typeof installer != 'string') return res.status(400).send('Type of "installer" is not string.');
-  }
+  if (game && typeof game != 'string')      return res.status(400).send('Type of "game" is not string.');
+  if (loader && typeof loader != 'string')    return res.status(400).send('Type of "loader" is not string.');
+  if (installer && typeof installer != 'string') return res.status(400).send('Type of "installer" is not string.');
 
   const result = await downloadInstaller(game || 'stable', loader || 'stable', installer || 'stable');
   if (typeof result == 'string') return res.status(200).send(result);
@@ -449,6 +445,7 @@ log('Registered /api/power/stop');
 
 app.get('/api/power/start', (_, res) => {
   if (server.status != 0) return res.status(409).send('Server is not offline.');
+  if (!readable('./server/fabric-installer.jar')) downloadInstaller();
 
   const send = d => {
     server.log += d;
@@ -485,8 +482,6 @@ app.get('/api/project/download', async (req, res) => {
   if (changingMods) return res.status(409).send('Mods are being updated. Try again later.');
   changingMods = true;
   try {
-    if (server.status != 0) return res.status(409).send('Server is not offline.');
-
     let { project, version, replace, serveronly } = req.headers;
     replace    = replace == 'true';
     serveronly = serveronly != 'false';

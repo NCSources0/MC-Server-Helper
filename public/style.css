@@ -352,10 +352,13 @@ main.mods > .projects > .project.disable button.toggle:hover {background: #f7f}
 
 .files > .file {
   display: flex;
-  font-size: calc(64px - var(--margin));
-  width: 64px;
-  height: 64px;
+  font-size: calc(32px - var(--margin));
+  width: 100%;
+  height: 32px;
   align-items: center;
+}
+.files > .file {
+  
 }
 
 

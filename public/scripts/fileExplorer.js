@@ -17,6 +17,21 @@ const folderIcons = {
   logs: 'folder_info',
 };
 
+const parse = {
+  /**
+   * Parses a `.properties` file
+   * @param { string } file 
+   * @returns {{}}
+  */
+  properties(file) {
+    const matches = [...file.matchAll(/^([^#][^=]*)=(.*)$/gm)];
+    const object = {};
+    matches.forEach(m => object[m[1].trim()] = m[2].trim());
+    return object;
+  },
+  
+}
+
 async function getDir(path) {
   const res = await get('/api/files/read-dir', { filepath: path });
   if (!res.ok) return await res.text();

@@ -25,7 +25,7 @@ function packFacets(obj) {
  * @param { string } query 
  */
 async function searchModrinth(query) {
-  const search = query => `https://api.modrinth.com/v2/search?query=${encodeURIComponent(query || '')}&limit=100&facets=${encodeURIComponent(JSON.stringify(packFacets(modrinthFacets)))}`;
+  const search = query => `https://api.modrinth.com/v2/search?query=${encodeURIComponent(query || '')}&index=downloads&limit=100&facets=${encodeURIComponent(JSON.stringify(packFacets(modrinthFacets)))}`;
   const request = await get(search(query));
   const json = await request.json();
   console.log(json);
@@ -107,10 +107,14 @@ const searchOnline = () => onlineToggle.classList.contains('toggled');
 
 const filterMods = q => server.mods.filter(m => m.name.includes(q) || m.slug.includes(q) || m.id.includes(q) || m.description.includes(q) || m.path.includes(q));
 
+let searchTimeout;
 modSearch.addEventListener('input', () => {
   modSearch.value = modSearch.value.replaceAll('\n', '');
   const q = modSearch.value
-  if (searchOnline()) searchModrinth(q);
+  if (searchOnline()) {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => searchModrinth(q), 500); // Search wait
+  }
   else updateMods(filterMods(q));
 });
 

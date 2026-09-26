@@ -1,6 +1,6 @@
 const regex = {
-  join: /^\[[0-9:]+] \[Server thread\/INFO]: (\S+) joined the game$/gm,
-  leave: /^\[[0-9:]+] \[Server thread\/INFO]: (\S+) left the game$/gm,
+  join: /^\[[0-9:.]+] \[Server thread\/INFO]: (\S+) joined the game$/gm,
+  leave: /^\[[0-9:.]+] \[Server thread\/INFO]: (\S+) left the game$/gm,
   escape: /e\/\[(.*?)](.+?)\//g
 }
 
@@ -50,18 +50,6 @@ async function getInstallerVersions(beta = flase) {
   const request = await get('https://meta.fabricmc.net/v2/versions/installer');
   const versions = await request.json();
   return (beta ? versions : versions.filter(e => e.stable)).map(e => e.version);
-}
-
-/**
- * Parses a `.properties` file
- * @param { string } file 
- * @returns {[{ key:any }]}
- */
-function parseProperties(file) {
-  const matches = [...file.matchAll(/^([^#][^=]*)=(.*)$/gm)];
-  const object = {};
-  matches.forEach(m => object[m[1].trim()] = m[2].trim());
-  return object;
 }
 
 const server = {
@@ -184,11 +172,11 @@ async function listen() {
     }
     server.log += content;
 
-    const joinedPlayers = regex.join .exec(content);
+    const joinedPlayers = content.matchAll(regex.join);
     if (joinedPlayers)
       joinedPlayers.forEach(p => server.players.push(p[1]));
 
-    const leftPlayers = regex.leave.exec(content);
+    const leftPlayers = content.matchAll(regex.leave);
     if (leftPlayers)
       leftPlayers.forEach(p => server.players.splice(server.players.findIndex(v => v == p[1]), 1));
   }
