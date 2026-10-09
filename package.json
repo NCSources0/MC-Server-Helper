@@ -3,7 +3,8 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "express": "^5.2.1",
-    "express-basic-auth": "^1.2.1"
+    "express-basic-auth": "^1.2.1",
+    "readline-sync": "^1.4.10"
   },
   "devDependencies": {
     "@types/node": "^26.4.0"

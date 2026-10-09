@@ -99,4 +99,22 @@ function randomString(length) {
   return string;
 }
 
-module.exports = { log, err, warn, download, writable, readable, randomString }
+/**
+ * Check if a path is a file
+ * @param { fs.PathLike } path 
+ * @returns 
+ */
+async function isFile(path) {
+  return (await fsp.stat(path)).isFile();
+}
+
+/**
+ * Check if a path is a directory
+ * @param { fs.PathLike } path 
+ * @returns 
+ */
+async function isDir(path) {
+  return (await fsp.stat(path)).isDirectory();
+}
+
+module.exports = { log, err, warn, download, writable, readable, randomString, isFile, isDir }

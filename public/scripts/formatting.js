@@ -21,7 +21,7 @@ function toggleQuickSettings() {
  * @param { Promise<number> } s
  */
 async function updateStatus(s = undefined) {
-  server.status = s != undefined ? s:server.status;
+  server.status = s != undefined ? s : server.status;
   const i = s != undefined ? s : ['Offline', 'Loading', 'Online'].indexOf(await server.getStatus());
   const selector = ['start', 'loading', 'stop'][i];
 

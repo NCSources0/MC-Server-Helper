@@ -6,19 +6,21 @@ const fsp       = require('fs/promises');
 const readline  = require('readline-sync');
 const cp        = require('child_process');
 const basicAuth = require('express-basic-auth');
-const { log, warn, err, download, writable, readable, randomString } = require('./helper.js');
+const { log, warn, err, download, writable, readable, randomString, isFile, isDir } = require('./helper.js');
 const EventEmitter = require('events');
 
 log('Packages Loaded');
 
 if (!fs.existsSync('./users.json')) {
-  const options = { limitMessage: 'Must have input.' }
-  log('"./users.json" not found, please create new user.')
-  const user = readline.question('Username: ', {...options, defaultInput: randomString(32)});
-  const pass = readline.question('Password: ', {...options, defaultInput: randomString(32)});
+  const options = { limitMessage: 'Must have input.' };
+  log('"./users.json" not found, please create new user. Leave either option blank to generate a random');
+  const user = readline.question('Username: ', {...options, defaultInput: randomString(Math.random() * 16 + 16)});
+  const pass = readline.question('Password: ', {...options, defaultInput: randomString(Math.random() * 16 + 16)});
   log('Username: ', user);
   log('Password: ', pass);
-  fs.writeFileSync('./users.json', `{"users":{"${user.replaceAll('"', '\\"').replaceAll('\\', '\\\\')}":"${bcrypt.hashSync(pass, 12)}"}}`);
+  const users = {users:{}};
+  users.users[user] = bcrypt.hashSync(pass, 12);
+  fs.writeFileSync('./users.json', JSON.stringify(users));
   log('Created "./users.json"');
 }
 
@@ -310,7 +312,7 @@ async function readDir(dirpath = './') {
   const dirPath = path.resolve('./server', dirpath);
   if (!dirPath.startsWith(serverPath + '/') && dirPath != serverPath) return err(`"${dirpath}" must be inside "./server"`);
   if (!await readable(dirPath)) return err(`"${dirpath}" must be readable.`);
-  if (!(await fsp.stat(dirPath)).isDirectory()) return [err(`'${dirpath}' must be a directory.`)];
+  if (!await isDir(dirPath)) return [err(`'${dirpath}' must be a directory.`)];
 
   const files = await fsp.readdir(dirPath, { encoding: 'utf8', withFileTypes: true });
   return files.map(f => {return { path: path.resolve(f.parentPath, f.name), name: f.name, type: f.isDirectory() ? 'directory' : 'file' }});
@@ -328,7 +330,7 @@ async function readFile(filepath = './') {
   const filePath = path.resolve('./server', filepath);
   if (!filePath.startsWith(serverPath + '/')) return [err(`"${filepath}" must be inside "./server"`)];
   if (!await readable(filePath)) return [err(`"${filepath}" must be readable.`)];
-  if (!(await fsp.stat(filePath)).isFile()) return [err(`'${filepath}' must be a file.`)];
+  if (!await isFile(filePath)) return [err(`'${filepath}' must be a file.`)];
 
   return await fsp.readFile(filePath, { encoding: 'utf8' });
 }
@@ -347,7 +349,7 @@ async function writeFile(filepath, data) {
   const filePath = path.resolve('./server', filepath);
   if (!filePath.startsWith(serverPath + '/')) return err(`"${filepath}" must be inside "./server"`);
   if (!await writable(filePath)) return err(`"${filepath}" must be writable.`);
-  if (!(await fsp.stat(filePath)).isFile()) return err(`${filepath} must be a file.`);
+  if (!await isFile(filePath)) return err(`${filepath} must be a file.`);
 
   await fsp.writeFile(filePath, data, { encoding: 'utf8' });
   return true;
@@ -373,7 +375,6 @@ log('Registered /api/status');
 app.get('/api/log', (_, res) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Transfer-Encoding', 'chunked');
-  res.write(`${server.log}e/[${server.status}]CHANGE STATUS/e/[]RELOAD MODS/`);
 
   const resetLog = () => res.write(`e/[]RESET LOG/`);
   const log = data => res.write(data.replaceAll('/', '//'));
@@ -406,7 +407,7 @@ app.get('/api/send', (req, res) => {
   });
   res.status(200).send('Commands sent successfully.');
 });
-log('Registered /api/send?commands');
+log('Registered /api/send\n- commands: string (seperated by \\n)');
 
 app.get('/api/server/update', async (req, res) => {
   if (server.status != 0) return res.status(409).send('Server is not offline.');
@@ -420,7 +421,7 @@ app.get('/api/server/update', async (req, res) => {
   if (typeof result == 'string') return res.status(200).send(result);
   else return res.status(500).send(result[0]);
 });
-log('Registered /api/server/update?game&loader&installer');
+log('Registered /api/server/update\n- game?: string\n- loader?: string\n- installer?: string');
 
 app.get('/api/power/stop', (req, res) => {
   if (server.status != 2) return res.status(409).send('Server is not online.');
@@ -443,9 +444,9 @@ app.get('/api/power/stop', (req, res) => {
 });
 log('Registered /api/power/stop');
 
-app.get('/api/power/start', (_, res) => {
+app.get('/api/power/start', async (_, res) => {
   if (server.status != 0) return res.status(409).send('Server is not offline.');
-  if (!readable('./server/fabric-installer.jar')) downloadInstaller();
+  if (!await readable('./server/fabric-installer.jar')) await downloadInstaller();
 
   const send = d => {
     server.log += d;
@@ -498,7 +499,7 @@ app.get('/api/project/download', async (req, res) => {
     server.emitter.emit('indexUpdate');
   }
 });
-log('Registered /api/project/download?project&version&replace&serveronly');
+log('Registered /api/project/download\n- project: string\n- version: string\n- replace: boolea\n- serveronly: boolean');
 
 app.get('/api/project/toggle', async (req, res) => {
   if (changingMods) return res.status(409).send('Mods are being updated. Try again later.');
@@ -518,7 +519,7 @@ app.get('/api/project/toggle', async (req, res) => {
     server.emitter.emit('indexUpdate');
   }
 });
-log('Registered /api/project/toggle?project');
+log('Registered /api/project/toggle\n- project: string');
 
 app.get('/api/project/delete', async (req, res) => {
   if (changingMods) return res.status(409).send('Mods are being updated. Try again later.');
@@ -538,7 +539,7 @@ app.get('/api/project/delete', async (req, res) => {
     server.emitter.emit('indexUpdate');
   }
 }); 
-log('Registered /api/project/delete?project');
+log('Registered /api/project/delete\n- project: string');
 
 app.get('/api/files/read-dir', async (req, res) => {
   const { filepath } = req.headers;
@@ -546,7 +547,7 @@ app.get('/api/files/read-dir', async (req, res) => {
   if (typeof result == 'object') return res.status(200).send(JSON.stringify(result));
   return res.status(500).send(result);
 });
-log('Registered /app/files/read-dir?filepath');
+log('Registered /api/files/read-dir\n- filepath: string');
 
 app.get('/api/files/read-file', async (req, res) => {
   const { filepath } = req.headers;
@@ -554,7 +555,28 @@ app.get('/api/files/read-file', async (req, res) => {
   if (typeof result == 'string') return res.status(200).send(result);
   return res.status(500).send(result[0]);
 });
-log('Registered /app/files/read-file');
+log('Registered /api/files/read-file\n- filepath: string');
+
+app.get(/\/server.*/, async (req, res) => {
+  const filepath  = req.originalUrl.replace('/server', '.');
+  const filePath  = path.resolve('./server', filepath);
+  log(filepath)
+  log(filePath)
+
+  const directory = await isDir(filePath);
+  if (directory) {
+    const result = await readDir(filepath);
+    if (typeof result == 'object') {
+      res.setHeader('Content-Type', 'application/json');
+      return res.send(JSON.stringify(result).replaceAll(__dirname, ''));
+    }
+    return res.status(500).send(result);
+  }
+  else {
+    if (await readable(filePath)) res.status(200).sendFile(filePath);
+  }
+});
+log('Registered /server/<path>');
 
 const fileOperations = [];
 app.get('/api/files/write-file', async (req, res) => {
@@ -569,6 +591,6 @@ app.get('/api/files/write-file', async (req, res) => {
     return res.status(500).send(result);
   } finally {fileOperations.splice(fileOperations.indexOf(filePath), 1)}
 });
-log('Registered /app/files/write-file');
+log('Registered /api/files/write-file\n- filepath: string\n- data: any');
 
-app.listen(80, '0.0.0.0', () => log('Listening on http://127.0.0.1'));
+app.listen(81, '0.0.0.0', () => log('Listening on http://127.0.0.1:81'));
