@@ -374,18 +374,27 @@ log('Registered /api/status');
 
 app.get('/api/log', (_, res) => {
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-  res.setHeader('Transfer-Encoding', 'chunked');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
 
   const resetLog = () => res.write(`e/[]RESET LOG/`);
   const log = data => res.write(data.replaceAll('/', '//'));
   const statusChange = status => res.write(`e/[${status}]CHANGE STATUS/`);
   const indexUpdate = () => res.write(`e/[]RELOAD MODS/`);
+  log(server.log);
+  
+  const heartbeat = setInterval(() => {
+    if (!res.destroyed) res.write('e/[]HEARTBEAT/');
+  }, 15000);
 
   server.emitter.on('resetLog', resetLog);
   server.emitter.on('log', log);
   server.emitter.on('statusChange', statusChange);
   server.emitter.on('indexUpdate', indexUpdate);
   res.once('close', () => {
+    clearInterval(heartbeat);
+
     server.emitter.off('resetLog', resetLog);
     server.emitter.off('log', log);
     server.emitter.off('statusChange', statusChange);

@@ -152,20 +152,18 @@ async function listen() {
     console.log(content);
     for(const key in calls) {
       const data = calls[key];
-      console.log(`"${key}" is "${data}"`);
-      if (key == 'CHANGE STATUS') {
-        updateStatus(data);
-        continue;
+      switch (key) {
+        case 'CHANGE STATUS':
+          updateStatus(data);
+        case 'RESET LOG':
+          server.log = '';
+        case 'RELOAD MODS':
+          getMods();
+        case 'HEARTBEAT':
+          break;
+        default:
+          console.warn(`Call name "${key}" is not supported.`);
       }
-      if (key == 'RESET LOG') {
-        server.log = '';
-        continue;
-      }
-      if (key == 'RELOAD MODS') {
-        await getMods();
-        continue;
-      }
-      console.warn(`Call name "${key}" is not supported.`);
     }
     server.log += content;
 
