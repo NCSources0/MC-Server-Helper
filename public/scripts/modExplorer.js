@@ -130,6 +130,7 @@ async function getMods() {
   server.mods = await req.json();
   updateLocalMods();
 }
+getMods();
 
 /**
  * Updates mods list when told there is a new mod
