@@ -124,6 +124,13 @@ onlineToggle.addEventListener('click', () => {
   else updateLocalMods();
 });
 
+async function getMods() {
+  const req = await get('/serverMods.json');
+  if (!req.ok) return;
+  server.mods = await req.json();
+  updateLocalMods();
+}
+
 /**
  * Updates mods list when told there is a new mod
  */

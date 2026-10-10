@@ -162,10 +162,7 @@ async function listen() {
         continue;
       }
       if (key == 'RELOAD MODS') {
-        const req = await get('/serverMods.json');
-        if (!req.ok) return;
-        server.mods = await req.json();
-        updateLocalMods();
+        await getMods();
         continue;
       }
       console.warn(`Call name "${key}" is not supported.`);
@@ -184,4 +181,5 @@ async function listen() {
   console.log('Can\'t listen anymore.');
 }
 listen();
-
+updateStatus();
+getMods();
